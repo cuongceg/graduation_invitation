@@ -1,0 +1,6 @@
+{
+  "name": "Academia Laureate // Spider Protocol Commencement",
+  "description": "Commencement Convocation & Academic Hooding Ceremony Invitation and HUD Telemetry Portal for Maya C. Vance (Class of 2024, Earth-1610).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

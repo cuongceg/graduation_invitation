@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Syne", "Space Grotesk", sans-serif;
+  --font-mono: "Space Grotesk", monospace;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-numeric: "Chakra Petch", "JetBrains Mono", monospace;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #0D0D0E;
+    color: #F8FAFC;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.font-display {
+  font-family: "Syne", "Space Grotesk", sans-serif;
+}
+
+.font-mono {
+  font-family: "Space Grotesk", monospace;
+}
+
+.font-body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Equal-width, equal-height tabular numerals */
+.font-numeric {
+  font-family: "Chakra Petch", "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: 0.02em;
+}
+
+.font-chakra {
+  font-family: "Chakra Petch", sans-serif;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.font-jetbrains {
+  font-family: "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Technical HUD utility glows and clip-paths */
+.glow-crimson {
+  box-shadow: 0 0 14px rgba(255, 30, 66, 0.35);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+
+.glow-text-crimson {
+  text-shadow: 0 0 16px rgba(255, 30, 66, 0.6);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
+}
+
+/* Chamfered tech cut */
+.chamfer-tr-bl {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
