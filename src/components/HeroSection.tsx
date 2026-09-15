@@ -1,41 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import { LanguageCode } from '../types';
 
 interface HeroSectionProps {
   profileImg: string;
-  onCopyPass: () => void;
-  copiedPass: boolean;
+  language: LanguageCode;
 }
+
+const GRADUATION_DATE = new Date('2026-09-27T10:00:00-04:00');
+
+const getTimeLeft = () => {
+  const remainingMs = Math.max(0, GRADUATION_DATE.getTime() - Date.now());
+  const totalSeconds = Math.floor(remainingMs / 1000);
+  return {
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor((totalSeconds % 86400) / 3600),
+    minutes: Math.floor((totalSeconds % 3600) / 60),
+    seconds: totalSeconds % 60,
+  };
+};
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   profileImg,
-  onCopyPass,
-  copiedPass,
+  language,
 }) => {
+  const isVietnamese = language === 'vi';
   // Live ticking countdown state
-  const [timeLeft, setTimeLeft] = useState({
-    days: 18,
-    hours: 4,
-    minutes: 28,
-    seconds: 45,
-  });
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft);
 
   const [photoFilter, setPhotoFilter] = useState<'grayscale' | 'multiverse' | 'glitch'>('grayscale');
 
   // Real second tick
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: 59, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        } else if (prev.days > 0) {
-          return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        }
-        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      });
+      setTimeLeft(getTimeLeft());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -50,12 +47,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Invitation Dispatch Header */}
           <div className="flex flex-col gap-2">
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold uppercase tracking-tight text-white leading-tight">
-              COMMENCEMENT CONVOCATION:<br />
-              <span className="text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)]">
-                YOU ARE INVITED
+            <h1 className="font-display uppercase tracking-tight leading-tight">
+              <span
+                className="glitch-text block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white"
+                data-text="[ INVITATION PROTOCOL: ]"
+              >
+                [ INVITATION PROTOCOL: ]
               </span>
-              <span className="text-white"> // CLASS OF 2024</span>
+
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)] [text-shadow:2px_0_0_rgba(0,229,255,0.25),-2px_0_0_rgba(255,30,66,0.25)]">
+                AN, YOU'RE INVITED.
+              </span>
+
+              <span className="block mt-2 text-xl sm:text-2xl lg:text-[27px] font-extrabold text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] [text-shadow:2px_0_0_rgba(255,30,66,0.2)]">
+                JOIN ME FOR THE NEXT CHAPTER.
+              </span>
             </h1>
           </div>
 
@@ -66,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex items-center justify-between border-b border-[#232B3E] pb-3 relative z-10 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-200">
                 <span className="material-symbols-outlined text-[16px] text-[#FF1E42]">timer</span>
-                <span>T-MINUS COMMENCEMENT PROCESSION</span>
+                <span>{isVietnamese ? 'ĐẾM NGƯỢC ĐẾN LỄ TỐT NGHIỆP' : 'T-MINUS COMMENCEMENT PROCESSION'}</span>
               </div>
             </div>
 
@@ -76,34 +82,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span className="font-chakra text-3xl sm:text-4xl font-extrabold text-[#FF1E42] tabular-nums tracking-wider leading-none inline-block text-center">
                   {formatNumber(timeLeft.days)}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">DAYS</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">{isVietnamese ? 'NGÀY' : 'DAYS'}</span>
               </div>
 
               <div className="p-3.5 rounded-lg border border-[#232B3E] bg-[#0B0D13] flex flex-col items-center justify-center group hover:border-slate-500 transition-colors">
                 <span className="font-chakra text-3xl sm:text-4xl font-extrabold text-white tabular-nums tracking-wider leading-none inline-block text-center">
                   {formatNumber(timeLeft.hours)}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">HOURS</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">{isVietnamese ? 'GIỜ' : 'HOURS'}</span>
               </div>
 
               <div className="p-3.5 rounded-lg border border-[#232B3E] bg-[#0B0D13] flex flex-col items-center justify-center group hover:border-slate-500 transition-colors">
                 <span className="font-chakra text-3xl sm:text-4xl font-extrabold text-white tabular-nums tracking-wider leading-none inline-block text-center">
                   {formatNumber(timeLeft.minutes)}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">MINUTES</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">{isVietnamese ? 'PHÚT' : 'MINUTES'}</span>
               </div>
 
               <div className="p-3.5 rounded-lg border border-[#00E5FF]/40 bg-[#0B0D13] flex flex-col items-center justify-center shadow-[inset_0_0_8px_rgba(0,229,255,0.15)] group hover:border-[#00E5FF] transition-colors">
                 <span className="font-chakra text-3xl sm:text-4xl font-extrabold text-[#00E5FF] animate-pulse tabular-nums tracking-wider leading-none inline-block text-center">
                   {formatNumber(timeLeft.seconds)}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">SECONDS</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1.5">{isVietnamese ? 'GIÂY' : 'SECONDS'}</span>
               </div>
-            </div>
-
-            {/* Timer Sub-bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[11px] text-slate-400 pt-1 gap-1 relative z-10">
-              <span>PROCESSION GATES LOCK: 09:45 EST</span>
             </div>
           </div>
         </div>
@@ -114,7 +115,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* Photo Container */}
             <div className="relative aspect-[4/5] w-full rounded-lg overflow-hidden border border-[#232B3E] bg-[#0B0D13] group">
               <img
-                alt="Portrait of Maya Christine Vance in graduation gown"
+                alt="Portrait of Cường Đỗ in graduation attire"
                 className={`w-full h-full object-cover object-center transition duration-500 ${
                   photoFilter === 'grayscale'
                     ? 'grayscale contrast-110 group-hover:grayscale-0'
@@ -151,7 +152,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="absolute bottom-0 inset-x-0 p-3.5 bg-gradient-to-t from-[#0B0D13] via-[#0B0D13]/90 to-transparent flex flex-col gap-1.5 font-mono">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white font-extrabold tracking-wider text-[14px]">
-                    MAYA C. VANCE
+                    CƯỜNG ĐỖ
                   </span>
                 </div>
                 <span className="text-[10px] text-[#00E5FF] tracking-wider uppercase font-semibold">

@@ -5,14 +5,12 @@ interface HeaderProps {
   onSelectTab: (tab: ActiveNavTab) => void;
   language: LanguageCode;
   onToggleLanguage: () => void;
-  profileImg: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onSelectTab,
   language,
   onToggleLanguage,
-  profileImg,
 }) => {
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0D0D0E]/95 backdrop-blur-md border-b border-[#2A2A30]">
@@ -36,10 +34,10 @@ export const Header: React.FC<HeaderProps> = ({
             Overview
           </button>
           <button
-            onClick={() => onSelectTab('timeline')}
+            onClick={() => onSelectTab('dress-code')}
             className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded transition-all text-slate-400 hover:text-[#00E5FF]"
           >
-            Timeline
+            Dress Code
           </button>
           <button
             onClick={() => onSelectTab('sector-map')}
@@ -60,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onToggleLanguage}
             className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-slate-400 bg-[#131722] border border-[#232B3E] hover:border-[#00E5FF]/60 hover:text-[#00E5FF] px-3 py-1 rounded-lg uppercase tracking-wider font-semibold transition-colors cursor-pointer"
-            title={language === 'en' ? 'Switch to Vietnamese' : 'Chuyển sang tiếng Anh'}
+            title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="w-2 h-2 rounded-full bg-[#00E5FF]"></span>
             {language === 'en' ? 'EN' : 'VI'}
