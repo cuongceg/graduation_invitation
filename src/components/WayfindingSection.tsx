@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { CarFront, Pin, Navigation, PersonStanding } from 'lucide-react';
+import { LanguageCode } from '../types';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'YOUR_MAPBOX_ACCESS_TOKEN';
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -9,62 +11,40 @@ const MAPBOX_STYLE_URL = 'mapbox://styles/thuckubin/cmtpb2i4800fa01r284107ab2';
 type TravelMode = 'driving' | 'walking';
 
 interface WaypointInfo {
-  id: 'ceremony' | 'parking' | 'lounge';
+  id: 'ceremony';
   title: string;
   coords: [number, number]; // [lng, lat]
   color: string;
 }
 
-const WAYPOINTS: Record<string, WaypointInfo> = {
-  ceremony: {
-    id: 'ceremony',
-    title: 'CEREMONY HALL (NORTH QUAD)',
-    coords: [105.8431, 21.0056],
-    color: '#FF1E42',
-  },
-  parking: {
-    id: 'parking',
-    title: 'GUEST PARKING LOT B',
-    coords: [105.8415, 21.0042],
-    color: '#3B82F6',
-  },
-  lounge: {
-    id: 'lounge',
-    title: 'WAITING LOUNGE',
-    coords: [105.8445, 21.0048],
-    color: '#10B981',
-  },
+const CEREMONY_WAYPOINT: WaypointInfo = {
+  id: 'ceremony',
+  title: 'CEREMONY HALL (NORTH QUAD)',
+  coords: [105.84245671713994, 21.006461474319902],
+  color: '#FF1E42',
 };
 
-interface StepInfo {
-  instruction: string;
-  distance: number;
-  duration: number;
-}
-
-export const WayfindingSection: React.FC = () => {
-  const [activePin, setActivePin] = useState<'ceremony' | 'parking' | 'lounge'>('ceremony');
+export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ language }) => {
+  const isVietnamese = language === 'vi';
   const [travelMode, setTravelMode] = useState<TravelMode>('walking');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [isLoadingRoute, setIsLoadingRoute] = useState(false);
   const [routeStats, setRouteStats] = useState<{ distance: string; duration: string } | null>(null);
-  const [routeSteps, setRouteSteps] = useState<StepInfo[]>([]);
-  const [showDirectionsDrawer, setShowDirectionsDrawer] = useState(false);
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const userMarkerRef = useRef<mapboxgl.Marker | null>(null);
 
-  // 1. Khởi tạo bản đồ Mapbox
+  // Initialize the Mapbox map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: MAPBOX_STYLE_URL,
-      center: WAYPOINTS.ceremony.coords,
+      center: [105.8431, 21.0056],
       zoom: 16.5,
-      pitch: 45,
+      pitch: 0,
       attributionControl: false,
     });
 
@@ -73,21 +53,18 @@ export const WayfindingSection: React.FC = () => {
     (window as any).map = map;
 
     map.on('load', () => {
-      // Đặt các Marker đích cố định
-      Object.values(WAYPOINTS).forEach((wp) => {
-        const el = document.createElement('div');
-        el.className = 'cursor-pointer';
-        el.innerHTML = `
-          <div class="p-2 rounded-full border shadow-lg transition-transform hover:scale-110"
-               style="border-color: ${wp.color}; background-color: ${wp.color}33;">
-            <span class="w-2.5 h-2.5 rounded-full block" style="background-color: ${wp.color};"></span>
-          </div>
-        `;
-        el.addEventListener('click', () => setActivePin(wp.id));
-        new mapboxgl.Marker({ element: el }).setLngLat(wp.coords).addTo(map);
-      });
+      // Add the fixed destination marker
+      const el = document.createElement('div');
+      el.className = 'cursor-pointer';
+      el.innerHTML = `
+        <div class="p-2 rounded-full border shadow-lg transition-transform hover:scale-110"
+             style="border-color: ${CEREMONY_WAYPOINT.color}; background-color: ${CEREMONY_WAYPOINT.color}33;">
+          <span class="w-2.5 h-2.5 rounded-full block animate-pulse" style="background-color: ${CEREMONY_WAYPOINT.color};"></span>
+        </div>
+      `;
+      new mapboxgl.Marker({ element: el }).setLngLat(CEREMONY_WAYPOINT.coords).addTo(map);
 
-      // Tạo Source & Layer cho tuyến đường (Route Line)
+      // Create the route source and layers
       map.addSource('route', {
         type: 'geojson',
         data: {
@@ -96,7 +73,7 @@ export const WayfindingSection: React.FC = () => {
         },
       });
 
-      // Viền phát sáng neon
+      // Neon glow casing
       map.addLayer({
         id: 'route-casing',
         type: 'line',
@@ -114,7 +91,7 @@ export const WayfindingSection: React.FC = () => {
         },
       });
 
-      // 2. Layer lõi chính (Core line)
+      // Core route line
       map.addLayer({
         id: 'route-main',
         type: 'line',
@@ -138,11 +115,11 @@ export const WayfindingSection: React.FC = () => {
     };
   }, []);
 
-  // 2. Lấy vị trí người dùng (Geolocation API)
+  // Get the user's location through the Geolocation API
   const getUserLocation = (): Promise<[number, number]> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        reject(new Error('Trình duyệt không hỗ trợ Geolocation'));
+        reject(new Error('This browser does not support geolocation.'));
         return;
       }
 
@@ -151,7 +128,7 @@ export const WayfindingSection: React.FC = () => {
           const coords: [number, number] = [pos.coords.longitude, pos.coords.latitude];
           setUserLocation(coords);
 
-          // Cập nhật marker vị trí người dùng trên map
+          // Update the user's location marker on the map
           if (mapRef.current) {
             if (!userMarkerRef.current) {
               const el = document.createElement('div');
@@ -176,7 +153,7 @@ export const WayfindingSection: React.FC = () => {
     });
   };
 
-  // 3. Gọi Mapbox Directions API và vẽ đường đi
+  // Call the Mapbox Directions API and draw the route
   const fetchRoute = async (
     origin: [number, number],
     destination: [number, number],
@@ -184,21 +161,21 @@ export const WayfindingSection: React.FC = () => {
   ) => {
     setIsLoadingRoute(true);
     try {
-      // Mapbox routing profile: mapbox/driving hoặc mapbox/walking
+      // Mapbox routing profile: mapbox/driving or mapbox/walking
       const profile = mode === 'driving' ? 'mapbox/driving' : 'mapbox/walking';
-      const url = `https://api.mapbox.com/directions/v5/${profile}/${origin[0]},${origin[1]};${destination[0]},${destination[1]}?geometries=geojson&steps=true&overview=full&access_token=${MAPBOX_TOKEN}`;
+      const url = `https://api.mapbox.com/directions/v5/${profile}/${origin[0]},${origin[1]};${destination[0]},${destination[1]}?geometries=geojson&overview=full&access_token=${MAPBOX_TOKEN}`;
 
       const res = await fetch(url);
       const data = await res.json();
 
       if (!data.routes || data.routes.length === 0) {
-        alert('Không tìm thấy tuyến đường khả dụng.');
+        alert('No available route was found.');
         return;
       }
 
       const route = data.routes[0];
 
-      // Format thời gian & khoảng cách
+      // Format duration and distance
       const distKm = (route.distance / 1000).toFixed(1);
       const durationMin = Math.round(route.duration / 60);
       setRouteStats({
@@ -206,16 +183,7 @@ export const WayfindingSection: React.FC = () => {
         duration: `${durationMin} phút`,
       });
 
-      // Lấy turn-by-turn steps
-      const steps: StepInfo[] = route.legs[0].steps.map((s: any) => ({
-        instruction: s.maneuver.instruction,
-        distance: Math.round(s.distance),
-        duration: Math.round(s.duration),
-      }));
-      setRouteSteps(steps);
-      setShowDirectionsDrawer(true);
-
-      // Cập nhật GeoJSON vào Mapbox Layer
+      // Update the GeoJSON in the Mapbox layer
       if (mapRef.current) {
         const source = mapRef.current.getSource('route') as mapboxgl.GeoJSONSource;
         if (source) {
@@ -226,7 +194,7 @@ export const WayfindingSection: React.FC = () => {
           });
         }
 
-        // Fit camera bao trọn cả điểm đầu và điểm cuối
+        // Fit the camera around both endpoints
         const bounds = new mapboxgl.LngLatBounds();
         bounds.extend(origin);
         bounds.extend(destination);
@@ -237,41 +205,31 @@ export const WayfindingSection: React.FC = () => {
         });
       }
     } catch (error) {
-      console.error('Lỗi khi tính toán đường đi:', error);
-      alert('Không thể tải tuyến đường. Vui lòng kiểm tra lại kết nối mạng hoặc Mapbox Token.');
+      console.error('Route calculation failed:', error);
+      alert('Unable to load the route. Check your connection or Mapbox token.');
     } finally {
       setIsLoadingRoute(false);
     }
   };
 
-  // Kích hoạt tìm đường từ vị trí người dùng
+  // Start routing from the user's location
   const handleStartRouting = async (mode: TravelMode = travelMode) => {
     try {
       let currentOrigin = userLocation;
       if (!currentOrigin) {
         currentOrigin = await getUserLocation();
       }
-      const targetDestination = WAYPOINTS[activePin].coords;
-      await fetchRoute(currentOrigin, targetDestination, mode);
+      await fetchRoute(currentOrigin, CEREMONY_WAYPOINT.coords, mode);
     } catch (err: any) {
-      alert('Vui lòng cấp quyền truy cập vị trí (GPS) trên trình duyệt để dẫn đường.');
+      alert('Please allow browser location access to get directions.');
     }
   };
 
-  // Tự động route lại khi thay đổi điểm đến hoặc phương tiện nếu đã có vị trí
+  // Recalculate the route when the travel mode changes
   const handleModeChange = (newMode: TravelMode) => {
     setTravelMode(newMode);
     if (userLocation) {
-      fetchRoute(userLocation, WAYPOINTS[activePin].coords, newMode);
-    }
-  };
-
-  const handleSelectWaypoint = (key: 'ceremony' | 'parking' | 'lounge') => {
-    setActivePin(key);
-    if (userLocation) {
-      fetchRoute(userLocation, WAYPOINTS[key].coords, travelMode);
-    } else if (mapRef.current) {
-      mapRef.current.flyTo({ center: WAYPOINTS[key].coords, zoom: 17 });
+      fetchRoute(userLocation, CEREMONY_WAYPOINT.coords, newMode);
     }
   };
 
@@ -280,13 +238,11 @@ export const WayfindingSection: React.FC = () => {
       <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-6 flex flex-col gap-4 shadow-xl font-mono">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#232B3E] pb-3">
-          <div>
-            <span className="text-xs text-[#FF1E42] uppercase tracking-widest font-bold">
-              CAMPUS_WAYFINDING // LIVE ROUTING
+          <div className="flex items-center gap-2 font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
+            <Pin size={16} aria-hidden="true" />
+            <span className="font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
+              {isVietnamese ? '[ BẢN_ĐỒ ]' : '[ CAMPUS_WAYFINDING ]'}
             </span>
-            <h3 className="font-display text-lg uppercase font-bold text-white tracking-wide">
-              Navigation to {WAYPOINTS[activePin].title}
-            </h3>
           </div>
           {routeStats && (
             <div className="flex items-center gap-2">
@@ -297,102 +253,80 @@ export const WayfindingSection: React.FC = () => {
           )}
         </div>
 
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-slate-300">
+          <span className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FF1E42] shadow-[0_0_8px_rgba(255,30,66,0.6)]"></span>
+            <span>My bachelor's degree location</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
+            <span>Parking area</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+            <span>Waiting and resting area</span>
+          </span>
+        </div>
+
         {/* Mapbox Canvas */}
         <div className="relative w-full h-80 sm:h-96 rounded-lg overflow-hidden border-2 border-[#232B3E] bg-[#0B0D13]">
           <div ref={mapContainerRef} className="w-full h-full" />
 
-          {/* User Location Badge */}
+          {/* User location badge */}
           <div className="absolute top-3 left-3 px-2.5 py-1 rounded border border-[#00E5FF]/40 bg-[#0B0D13]/90 backdrop-blur-sm text-[10px] text-[#00E5FF] font-semibold tracking-wider flex items-center gap-1.5 pointer-events-none z-10">
             <span className={`w-1.5 h-1.5 rounded-full ${userLocation ? 'bg-[#00E5FF] animate-pulse' : 'bg-gray-500'}`}></span>
             {userLocation
               ? `USER_GPS: ${userLocation[1].toFixed(4)}°N, ${userLocation[0].toFixed(4)}°E`
-              : 'GPS: WAITING_FOR_LOCATION'}
+              : isVietnamese ? 'GPS: ĐANG CHỜ VỊ TRÍ' : 'GPS: WAITING_FOR_LOCATION'}
           </div>
 
-          {/* Overlay chọn Travel Mode (Đi bộ / Xe) */}
+          {/* Travel mode controls */}
           <div className="absolute top-3 right-3 flex gap-1 z-10 bg-[#0B0D13]/80 p-1 rounded-lg border border-[#232B3E]">
             <button
+              type="button"
               onClick={() => handleModeChange('walking')}
+              aria-label={isVietnamese ? 'Đi bộ' : 'Walking'}
+              title={isVietnamese ? 'Đi bộ' : 'Walking'}
               className={`px-2.5 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition ${
                 travelMode === 'walking'
                   ? 'bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              🚶 Đi bộ
+              <PersonStanding size={15} aria-hidden="true" />
+              <span>{isVietnamese ? 'Đi bộ' : 'Walking'}</span>
             </button>
             <button
+              type="button"
               onClick={() => handleModeChange('driving')}
+              aria-label={isVietnamese ? 'Lái xe' : 'Driving'}
+              title={isVietnamese ? 'Lái xe' : 'Driving'}
               className={`px-2.5 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition ${
                 travelMode === 'driving'
                   ? 'bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              🚗 Xe cộ
+              <CarFront size={15} aria-hidden="true" />
+              <span>{isVietnamese ? 'Lái xe' : 'Driving'}</span>
+            </button>
+          </div>
+
+          <div className="absolute bottom-3 right-3 z-10 flex flex-col items-center gap-2">
+
+            <button
+              type="button"
+              onClick={() => handleStartRouting()}
+              disabled={isLoadingRoute}
+              aria-label={isLoadingRoute ? 'Đang tìm đường' : 'Route từ vị trí của tôi'}
+              title={isLoadingRoute ? 'Đang tìm đường' : 'Route từ vị trí của tôi'}
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#FF1E42] bg-[#FF1E42] text-white shadow-[0_0_20px_rgba(255,30,66,0.45)] transition-all duration-300 hover:scale-110 hover:bg-[#ff3352] focus:outline-none focus:ring-2 focus:ring-[#FF1E42] focus:ring-offset-2 focus:ring-offset-[#0B0D13] disabled:cursor-wait disabled:opacity-60"
+            >
+              <Navigation size={22} className={isLoadingRoute ? 'animate-pulse' : ''} />
             </button>
           </div>
         </div>
 
-        {/* Thao tác chọn địa điểm & Kích hoạt dẫn đường */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            {(['ceremony', 'parking', 'lounge'] as const).map((key) => (
-              <button
-                key={key}
-                onClick={() => handleSelectWaypoint(key)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
-                  activePin === key
-                    ? 'border-[#FF1E42] bg-[#181E2C] text-white font-semibold shadow-[0_0_8px_rgba(255,30,66,0.3)]'
-                    : 'border-[#232B3E] bg-[#0B0D13] text-slate-300 hover:text-white'
-                }`}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: WAYPOINTS[key].color }}
-                ></span>
-                <span>{WAYPOINTS[key].title}</span>
-              </button>
-            ))}
-          </div>
-
-          <button
-            onClick={() => handleStartRouting()}
-            disabled={isLoadingRoute}
-            className="px-4 py-2 rounded-lg bg-[#FF1E42] hover:bg-[#ff3352] text-white font-bold tracking-wider transition-all flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
-          >
-            <span>{isLoadingRoute ? 'ĐANG TÌM ĐƯỜNG...' : 'ROUTE TỪ VỊ TRÍ CỦA TÔI'}</span>
-          </button>
-        </div>
-
-        {/* Drawer Turn-by-Turn Steps */}
-        {showDirectionsDrawer && routeSteps.length > 0 && (
-          <div className="mt-2 p-4 rounded-lg border border-[#00E5FF]/30 bg-[#0B0D13] text-xs flex flex-col gap-3 animate-fadeIn">
-            <div className="flex items-center justify-between border-b border-[#232B3E] pb-2 text-[#00E5FF]">
-              <span className="font-bold uppercase tracking-wider">
-                CHỈ DẪN DI CHUYỂN TỪNG BƯỚC ({travelMode === 'walking' ? 'ĐI BỘ' : 'PHƯƠNG TIỆN'})
-              </span>
-              <button
-                onClick={() => setShowDirectionsDrawer(false)}
-                className="text-slate-400 hover:text-white text-[11px]"
-              >
-                [ ĐÓNG ]
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
-              {routeSteps.map((step, idx) => (
-                <div key={idx} className="p-2.5 rounded border border-[#232B3E] bg-[#131722] flex flex-col justify-between gap-1">
-                  <div className="flex justify-between text-[10px] text-[#00E5FF]">
-                    <span>BƯỚC {idx + 1}</span>
-                    <span>{step.distance}m</span>
-                  </div>
-                  <p className="text-slate-200 text-[11px]">{step.instruction}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );

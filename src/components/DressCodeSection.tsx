@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { LanguageCode } from '../types';
+import { Shirt } from 'lucide-react';
 
-export const DressCodeSection: React.FC = () => {
+export const DressCodeSection: React.FC<{ language: LanguageCode }> = ({ language }) => {
+  const isVietnamese = language === 'vi';
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
 
   const palette = [
@@ -18,13 +21,13 @@ export const DressCodeSection: React.FC = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full" id="dress-code-section">
       <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-md">
         {/* Left Specification */}
         <div className="flex flex-col gap-2 max-w-xl">
           <div className="flex items-center gap-2 font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
-            <span className="material-symbols-outlined text-[16px]">terminal</span>
-            <span>DRESS SPEC </span>
+            <Shirt size={16} aria-hidden="true" />
+            <span>{isVietnamese ? '[ TRANG_PHỤC ]' : '[ DRESS_SPEC ]'}</span>
           </div>
 
           <div className="inline-block">
@@ -34,7 +37,7 @@ export const DressCodeSection: React.FC = () => {
           </div>
 
           <p className="font-mono text-xs text-slate-400 leading-relaxed">
-            Formal / academic celebratory attire. Subdued spider-charcoal tones with vivid accents recommended. Standard academic honor cords and stoles authorized for commencement quad access.
+            {isVietnamese ? 'Trang phục trang trọng / học thuật. Khuyến nghị tông màu than trầm với điểm nhấn nổi bật. Dây danh dự và lễ phục học thuật tiêu chuẩn được phép sử dụng tại khu vực lễ tốt nghiệp.' : 'Come as you are — there\’s no dress code. Wear whatever feels like you. The colors shown here are only recommendations to match the visual theme of the invitation.'}
           </p>
         </div>
 
@@ -44,7 +47,7 @@ export const DressCodeSection: React.FC = () => {
           <div className="flex flex-col gap-2 font-mono">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#00E5FF] uppercase tracking-widest font-bold">
-                APPROVED PALETTE MATRIX
+                {isVietnamese ? 'BẢNG MÀU ĐƯỢC DUYỆT' : 'APPROVED PALETTE MATRIX'}
               </span>
               {copiedHex && (
                 <span className="text-[9px] text-[#00E5FF] font-bold animate-pulse">

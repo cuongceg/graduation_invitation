@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
+import { LanguageCode } from '../types';
 
 
-export const ScheduleSection= ({}) => {
+export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
+  const isVietnamese = language === 'vi';
   const [alertArmed, setAlertArmed] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
 
@@ -21,12 +23,12 @@ export const ScheduleSection= ({}) => {
       'VERSION:2.0',
       'PRODID:-//Academia Laureate//Spider Protocol Convocation//EN',
       'BEGIN:VEVENT',
-      'UID:spider-protocol-vance-2024@academialaureate.edu',
-      'DTSTAMP:20240501T120000Z',
-      'DTSTART:20240518T140000Z',
-      'DTEND:20240518T170000Z',
-      'SUMMARY:Commencement Convocation: Maya C. Vance (Class of 2024)',
-      'DESCRIPTION:Formal Degree Conferral & Academic Hooding Ceremony. Seat A-14. Guest Access Code: <SPIDER_REC_MAY18>',
+      'UID:graduation-cuong-do-2026@academialaureate.edu',
+      'DTSTAMP:20260915T120000Z',
+      'DTSTART:20260927T140000Z',
+      'DTEND:20260927T170000Z',
+      'SUMMARY:Graduation Ceremony: Cường Đỗ (2026)',
+      'DESCRIPTION:Graduation ceremony. Seat A-14. Guest Access Code: <SPIDER_REC_SEP27>',
       'LOCATION:Campus Quadrangle // Sector 7, Dimension NYC',
       'STATUS:CONFIRMED',
       'END:VEVENT',
@@ -36,7 +38,7 @@ export const ScheduleSection= ({}) => {
     const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', 'Maya_Vance_Commencement_2024.ics');
+    link.setAttribute('download', 'Cuong_Do_Graduation_2026.ics');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -47,7 +49,7 @@ export const ScheduleSection= ({}) => {
 
   const handleGoogleCalendar = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const gCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Commencement+Convocation:+Maya+C.+Vance+(Class+of+2024)&dates=20240518T140000Z/20240518T170000Z&details=Academic+Hooding+Ceremony.+Guest+Access+Code:+SPIDER_REC_MAY18&location=Academic+Quadrangle,+Sector+7,+NYC';
+    const gCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Graduation+Ceremony:+Cường+Đỗ+(2026)&dates=20260927T140000Z/20260927T170000Z&details=Graduation+ceremony.+Seat+A-14.+Guest+Access+Code:+SPIDER_REC_SEP27&location=Academic+Quadrangle,+Sector+7,+NYC';
     window.open(gCalUrl, '_blank');
   };
 
@@ -61,18 +63,18 @@ export const ScheduleSection= ({}) => {
         {/* Left Date Telemetry */}
         <div className="flex items-center gap-4 relative z-10">
           <div className="w-16 h-16 rounded-lg border-2 border-[#FF1E42] bg-[#0B0D13] flex flex-col items-center justify-center font-mono shadow-[0_0_12px_rgba(255,30,66,0.3)]">
-            <span className="text-[10px] text-[#00E5FF] font-bold tracking-widest">MAY</span>
-            <span className="font-numeric text-2xl text-[#FF1E42] font-extrabold leading-none tabular-nums">18</span>
+            <span className="text-[10px] text-[#00E5FF] font-bold tracking-widest">SEP</span>
+            <span className="font-numeric text-2xl text-[#FF1E42] font-extrabold leading-none tabular-nums">27</span>
           </div>
           <div className="flex flex-col">
             <span className="font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
-              [PROTOCOL DATE]
+              {isVietnamese ? '[ NGÀY_TỔ_CHỨC ]' : '[ PROTOCOL_DATE ]'}
             </span>
-            <h2 className="font-display text-xl font-bold uppercase text-white tracking-wide">
-              Saturday, May 18, 2024
+            <h2 className="font-chakra text-white text-lg sm:text-xl font-extrabold leading-tight">
+              9:30 AM – 10:00 AM (UTC+7)
             </h2>
             <p className="font-mono text-xs text-slate-400">
-              Academic Quadrangle • Eastern Standard Time • Dimension NYC
+              Hanoi University of Science and Technology • Hai Ba Trung • Ha Noi
             </p>
           </div>
         </div>
@@ -104,7 +106,7 @@ export const ScheduleSection= ({}) => {
             <span>
               {alertArmed
                 ? '[ ALERT ARMED // T-24H SYNCED ]'
-                : '[ SET DISPATCH ALERT // 24H ]'}
+                : '[ SET ALERT ]'}
             </span>
           </button>
         </div>
