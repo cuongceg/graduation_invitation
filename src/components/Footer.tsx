@@ -8,16 +8,15 @@ export const Footer: React.FC = () => {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#131722] border border-[#232B3E] text-xs">
           <span className="w-2 h-2 rounded-full bg-[#FF1E42] animate-pulse"></span>
           <span className="text-[#FF1E42] font-bold">STATUS: 200 OK</span>
-          <span className="text-[#00E5FF]">// EARTH-1610 CEREMONY SYSTEMS OPERATIONAL</span>
         </div>
 
         {/* Dispatch Assistance */}
         <div className="flex flex-col items-center gap-1 text-xs">
           <span className="uppercase tracking-widest text-white font-bold">
-            &gt; LIÊN HỆ HỖ TRỢ / WEB DISPATCH ASSISTANCE
+            &gt; CONTACT SUPPORT
           </span>
           <p className="text-slate-400 max-w-md">
-            Nếu bạn cần hỗ trợ về lễ tốt nghiệp, chỗ ngồi hoặc phương tiện di chuyển, vui lòng liên hệ trực tiếp.
+            For help with the ceremony, parking, or the web, please contact us directly.
           </p>
         </div>
 
@@ -51,13 +50,9 @@ export const Footer: React.FC = () => {
             <span>Zalo</span>
           </a>
         </div>
-
-        {/* Divider */}
-        <div className="w-20 h-px bg-[#232B3E] my-1"></div>
-
         {/* Copyright */}
         <p className="text-[10px] text-slate-500 tracking-wider uppercase">
-          © 2024 ACADEMIA LAUREATE. SPIDER-PROTOCOL FEED BUILD_VER 2.4.0. ALL RIGHTS RESERVED.
+          © 2026 CEDRIC DO BUILD_VER 0.3.6. ALL RIGHTS RESERVED.
         </p>
       </div>
     </footer>
