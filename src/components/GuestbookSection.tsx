@@ -1,32 +1,40 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
-import { WishEntry, AffiliationType } from '../types';
+import { WishEntry, AffiliationType, LanguageCode } from '../types';
+import { submitGuestbookEntry, toGuestbookPayload } from '../services/guestbook';
 
 interface GuestbookSectionProps {
   wishes: WishEntry[];
-  onAddWish: (wish: WishEntry) => void;
+  onAddWish: (wish: WishEntry) => void | Promise<void>;
   onLikeWish: (id: string) => void;
+  language: LanguageCode;
+  isLoadingWishes: boolean;
+  guestbookError: string;
 }
 
 export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
   wishes,
   onAddWish,
-  onLikeWish,
+  language,
+  isLoadingWishes,
+  guestbookError,
 }) => {
+  const isVietnamese = language === 'vi';
   const [fullName, setFullName] = useState('');
-  const [affiliation, setAffiliation] = useState<AffiliationType>('Gia đình');
+  const [affiliation, setAffiliation] = useState<AffiliationType>('Family');
   const [message, setMessage] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState('');
   const [activeAffiliationFilter, setActiveAffiliationFilter] = useState<string>('ALL');
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [successToast, setSuccessToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const availableTags = [
     '🎓 PROUD_OF_YOU',
-    '✨ BRIGHT_FUTURE',
-    '🕷️ SPIDER_PRIDE',
-    '⚡ QUANTUM_LEAP',
+    '🚀 NEXT_CHAPTER',
+    '💫 KEEP_SHINING',
+    '❤️ ALWAYS_ROOTING',
   ];
 
   const toggleTag = (tag: string) => {
@@ -37,11 +45,12 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !message.trim()) return;
 
     setIsTransmitting(true);
+    setErrorMessage('');
 
     // Create initials
     const words = fullName.trim().split(/\s+/);
@@ -49,7 +58,9 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
       ? (words[0][0] + words[words.length - 1][0]).toUpperCase()
       : words[0].slice(0, 2).toUpperCase();
 
-    setTimeout(() => {
+    try {
+      await submitGuestbookEntry(toGuestbookPayload(fullName, affiliation, message, selectedTags));
+
       const newWish: WishEntry = {
         id: 'wish-' + Date.now(),
         name: fullName.trim(),
@@ -62,8 +73,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
         isCustom: true,
       };
 
-      onAddWish(newWish);
-      setIsTransmitting(false);
+      await onAddWish(newWish);
       setSuccessToast(true);
       setFullName('');
       setMessage('');
@@ -78,7 +88,11 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
       });
 
       setTimeout(() => setSuccessToast(false), 5000);
-    }, 400);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Gửi lời chúc thất bại');
+    } finally {
+      setIsTransmitting(false);
+    }
   };
 
   // Filtered wishes
@@ -97,13 +111,13 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
         <div className="flex flex-col gap-1 border-b border-[#232B3E] pb-4 font-mono">
           <div className="flex items-center gap-2 text-xs text-[#00E5FF] uppercase tracking-widest font-bold">
             <span className="material-symbols-outlined text-[16px]">terminal</span>
-            <span>INPUT_STREAM // WEB_DISPATCH_LOG</span>
+            <span>[ MEMORY_STREAM ]</span>
           </div>
           <h3 className="font-display text-xl uppercase font-bold text-white tracking-wide">
-            Commencement Guestbook // Web Dispatch Log
+            TRANSMIT A MESSAGE
           </h3>
           <p className="font-mono text-xs text-slate-400">
-            Chia sẻ những lời chúc mừng và kỷ niệm đáng nhớ cùng Maya trên chặng đường tân khoa (Earth-1610).
+            {isVietnamese ? 'Hãy chia sẻ lời chúc mừng và những kỷ niệm đáng nhớ cùng Cường trên hành trình tốt nghiệp.' : 'Leave a message for the next chapter. Your message will become part of Cường\'s graduation memory stream.'}
           </p>
         </div>
 
@@ -115,9 +129,22 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               <div className="p-3 rounded-lg border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-mono flex items-center justify-between animate-fadeIn shadow-[0_0_12px_rgba(0,229,255,0.25)]">
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-ping"></span>
-                  [DISPATCH TRANSMITTED] Lời chúc của bạn đã được ghi vào mạng lưới Spider-Protocol!
+                  {isVietnamese ? '[ĐÃ GỬI THÔNG ĐIỆP] Lời chúc của bạn đã được ghi vào mạng lưới Spider-Protocol!' : '[ TRANSMISSION RECEIVED ] Your message has been successfully added to the memory stream!'}
                 </span>
                 <span className="font-bold">STATUS: 200 OK</span>
+              </div>
+            )}
+            {errorMessage && (
+              <div className="p-3 rounded-lg border border-[#FF1E42] bg-[#FF1E42]/10 text-[#FF6B7F] text-xs font-mono flex items-center justify-between shadow-[0_0_12px_rgba(255,30,66,0.2)]">
+                <span>{isVietnamese ? `[LỖI GỬI THÔNG ĐIỆP] ${errorMessage}` : `[ TRANSMISSION FAILED ] ${errorMessage}`}</span>
+                <button
+                  type="button"
+                  className="font-bold hover:text-white cursor-pointer"
+                  onClick={() => setErrorMessage('')}
+                  aria-label={isVietnamese ? 'Đóng thông báo lỗi' : 'Dismiss error'}
+                >
+                  DISMISS
+                </button>
               </div>
             )}
 
@@ -125,11 +152,11 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               {/* Full Name */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
-                  &gt; FULL_NAME / HỌ VÀ TÊN <span className="text-[#FF1E42]">*</span>
+                  &gt; {isVietnamese ? 'HỌ VÀ TÊN' : 'FULL_NAME'} <span className="text-[#FF1E42]">*</span>
                 </label>
                 <input
                   className="w-full px-3.5 py-2.5 rounded-lg bg-[#0B0D13] border border-[#232B3E] focus:border-[#FF1E42] focus:ring-1 focus:ring-[#FF1E42] text-white placeholder:text-slate-600 text-xs font-mono transition-colors outline-none"
-                  placeholder="e.g. Dr. William Henderson / Bác Hùng"
+                  placeholder="e.g. Dr. William Henderson"
                   required
                   type="text"
                   value={fullName}
@@ -140,10 +167,10 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               {/* Affiliation */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
-                  &gt; AFFILIATION / MỐI QUAN HỆ
+                  &gt; {isVietnamese ? 'MỐI QUAN HỆ' : 'CONNECTION_TYPE'}
                 </label>
                 <div className="flex flex-wrap gap-2 text-xs">
-                  {(['Gia đình', 'Bạn học', 'Giảng viên', 'Bạn thân'] as AffiliationType[]).map(item => (
+                  {(['Family', 'Friend', 'Lecturer', 'Colleague'] as AffiliationType[]).map(item => (
                     <button
                       key={item}
                       type="button"
@@ -163,11 +190,11 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               {/* Message */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
-                  &gt; MESSAGE_PAYLOAD / LỜI CHÚC &amp; KỶ NIỆM <span className="text-[#FF1E42]">*</span>
+                  &gt; {isVietnamese ? 'NỘI DUNG LỜI CHÚC' : 'MESSAGE_PAYLOAD'} <span className="text-[#FF1E42]">*</span>
                 </label>
                 <textarea
                   className="w-full px-3.5 py-2.5 rounded-lg bg-[#0B0D13] border border-[#232B3E] focus:border-[#FF1E42] focus:ring-1 focus:ring-[#FF1E42] text-white placeholder:text-slate-600 text-xs font-mono transition-colors outline-none resize-none"
-                  placeholder="Share your congratulations, memories, or advice for Maya's journey ahead..."
+                  placeholder="Share your congratulations, memories, or advice for Cường's journey ahead..."
                   required
                   rows={4}
                   value={message}
@@ -177,9 +204,10 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
 
               {/* Quick Tags */}
               <div className="flex flex-col gap-1.5">
-                <span className="text-[10px] text-[#00E5FF] uppercase tracking-widest font-semibold">
-                  &gt; QUICK_TAGS:
-                </span>
+                
+                <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
+                  <span className="text-[#00E5FF]">&gt; QUICK_TAGS </span>
+                </label>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {availableTags.map(tag => {
                     const isSelected = selectedTags.includes(tag);
@@ -214,7 +242,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                   <span>
                     {isTransmitting
                       ? '[ TRANSMITTING PACKET... ]'
-                      : '[ TRANSMIT MESSAGE // GỬI LỜI CHÚC ]'}
+                      : (isVietnamese ? '[ GỬI LỜI CHÚC ]' : '[ TRANSMIT MESSAGE ]')}
                   </span>
                 </button>
               </div>
@@ -227,10 +255,10 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
             <div className="flex items-center justify-between border-b border-[#232B3E] pb-2">
               <span className="text-xs uppercase font-bold tracking-wider text-white flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#FF1E42]"></span>
-                [ WALL_OF_WISHES // LOGS ]
+                [ WALL_OF_WISHES ]
               </span>
               <span className="text-[10px] text-[#00E5FF] bg-[#00E5FF]/15 border border-[#00E5FF]/40 px-2 py-0.5 rounded font-bold shadow-[0_0_6px_rgba(0,229,255,0.2)]">
-                {wishes.length + 23} RECORDS
+                {wishes.length} RECORDS
               </span>
             </div>
 
@@ -246,7 +274,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                 />
               </div>
               <div className="flex flex-wrap gap-1.5 text-[10px]">
-                {['ALL', 'Gia đình', 'Bạn học', 'Advisor', 'Lab Partner'].map(f => (
+                {['ALL', 'Family', 'Friend', 'Lecturer', 'Colleague'].map(f => (
                   <button
                     key={f}
                     onClick={() => setActiveAffiliationFilter(f)}
@@ -264,17 +292,25 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
 
             {/* List of Messages */}
             <div className="flex flex-col gap-3 max-h-[520px] overflow-y-auto pr-1">
-              {filteredWishes.length === 0 ? (
+              {isLoadingWishes ? (
+                <div className="p-6 rounded-lg border border-[#232B3E] bg-[#0B0D13] text-center text-xs text-[#00E5FF]">
+                  LOADING MEMORY STREAM...
+                </div>
+              ) : guestbookError ? (
+                <div className="p-6 rounded-lg border border-[#FF1E42] bg-[#0B0D13] text-center text-xs text-[#FF6B7F]">
+                  {guestbookError}
+                </div>
+              ) : filteredWishes.length === 0 ? (
                 <div className="p-6 rounded-lg border border-[#232B3E] bg-[#0B0D13] text-center text-xs text-slate-500">
                   NO TELEMETRY MATCHES FILTER.
                 </div>
               ) : (
                 filteredWishes.map(item => {
-                  const isFamily = item.affiliation === 'Gia đình';
-                  const isLab = item.affiliation === 'Lab Partner';
+                  const isFamily = item.affiliation === 'Family';
+                  const isColleague = item.affiliation === 'Colleague';
                   const badgeBorder = isFamily
                     ? 'border-[#FF1E42] text-[#FF1E42]'
-                    : isLab
+                    : isColleague
                     ? 'border-[#00E5FF]/60 text-[#00E5FF]'
                     : 'border-[#FF1E42] text-[#FF1E42]';
 
@@ -293,7 +329,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                           <span className="font-bold text-white">{item.name}</span>
                           <span
                             className={`text-[10px] ${
-                              isLab ? 'text-[#00E5FF]' : 'text-[#FF1E42]'
+                              isColleague ? 'text-[#00E5FF]' : 'text-[#FF1E42]'
                             }`}
                           >
                             [{item.affiliation}]
@@ -318,15 +354,6 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                             </span>
                           ))}
                         </div>
-
-                        <button
-                          onClick={() => onLikeWish(item.id)}
-                          className="flex items-center gap-1 text-slate-400 hover:text-[#FF1E42] transition-colors cursor-pointer"
-                          title="Transmit Appreciation"
-                        >
-                          <span className="text-[#FF1E42]">♥</span>
-                          <span>{item.likes}</span>
-                        </button>
                       </div>
                     </div>
                   );
