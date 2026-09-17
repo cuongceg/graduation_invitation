@@ -20,6 +20,28 @@ export interface GuestbookEntry {
   createdAt: string;
 }
 
+export interface Guest {
+  id: string;
+  fullName: string;
+  avatarUrl: string | null;
+}
+
+export const fetchGuestById = async (id: string): Promise<Guest | null> => {
+  const { data, error } = await supabase
+    .from('guests')
+    .select('id, full_name, avatar_url')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message || 'Không thể lấy thông tin khách mời');
+  }
+
+  return data
+    ? { id: data.id, fullName: data.full_name, avatarUrl: data.avatar_url }
+    : null;
+};
+
 const affiliationToConnectionType: Record<AffiliationType, ConnectionType> = {
   Family: 'family',
   Friend: 'friend',

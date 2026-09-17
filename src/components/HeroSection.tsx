@@ -3,6 +3,7 @@ import { LanguageCode } from '../types';
 
 interface HeroSectionProps {
   profileImg: string;
+  guestName: string;
   language: LanguageCode;
 }
 
@@ -21,6 +22,7 @@ const getTimeLeft = () => {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   profileImg,
+  guestName,
   language,
 }) => {
   const isVietnamese = language === 'vi';
@@ -40,33 +42,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 w-full" id="overview-section">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-6 sm:pb-8 w-full" id="overview-section">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* Left Column (Main Information) */}
-        <div className="lg:col-span-7 flex flex-col items-start gap-6 order-2 lg:order-1">
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start gap-5 sm:gap-6 order-1 lg:order-1 text-center lg:text-left">
 
           {/* Invitation Dispatch Header */}
           <div className="flex flex-col gap-2">
             <h1 className="font-display uppercase tracking-tight leading-tight">
               <span
-                className="glitch-text block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white"
+                className="glitch-text block text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white break-words"
                 data-text="[ INVITATION PROTOCOL: ]"
               >
                 [ INVITATION PROTOCOL: ]
               </span>
 
-              <span className="block text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)] [text-shadow:2px_0_0_rgba(0,229,255,0.25),-2px_0_0_rgba(255,30,66,0.25)]">
-                AN, YOU'RE INVITED.
+              <span className="block text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)] [text-shadow:2px_0_0_rgba(0,229,255,0.25),-2px_0_0_rgba(255,30,66,0.25)] break-words">
+                {guestName.toUpperCase()}, YOU'RE INVITED.
               </span>
 
-              <span className="block mt-2 text-xl sm:text-2xl lg:text-[27px] font-extrabold text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] [text-shadow:2px_0_0_rgba(255,30,66,0.2)]">
+              <span className="block mt-2 text-base sm:text-2xl lg:text-[27px] font-extrabold text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] [text-shadow:2px_0_0_rgba(255,30,66,0.2)]">
                 JOIN ME FOR THE NEXT CHAPTER.
               </span>
             </h1>
           </div>
 
           {/* Countdown Timer HUD Card */}
-          <div className="p-5 rounded-xl border border-[#232B3E] bg-[#131722] max-w-xl w-full flex flex-col gap-4 shadow-2xl relative overflow-hidden">
+          <div className="p-4 sm:p-5 rounded-xl border border-[#232B3E] bg-[#131722] max-w-xl w-full flex flex-col gap-4 shadow-2xl relative overflow-hidden text-left">
             <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FF1E42]/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <div className="flex items-center justify-between border-b border-[#232B3E] pb-3 relative z-10 flex-wrap gap-2">
@@ -110,12 +112,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Right Column (Student Card) */}
-        <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2">
-          <div className="relative w-full max-w-sm rounded-xl border-2 border-[#232B3E] bg-[#131722] p-2.5 flex flex-col gap-2.5 shadow-2xl">
+        <div className="lg:col-span-5 flex justify-center lg:justify-end order-2 lg:order-2 w-full">
+          <div className="relative w-full max-w-[18rem] sm:max-w-sm rounded-xl border-2 border-[#232B3E] bg-[#131722] p-2.5 flex flex-col gap-2.5 shadow-2xl">
             {/* Photo Container */}
             <div className="relative aspect-[4/5] w-full rounded-lg overflow-hidden border border-[#232B3E] bg-[#0B0D13] group">
               <img
-                alt="Portrait of Cường Đỗ in graduation attire"
+                alt={`Portrait of ${guestName} in graduation attire`}
                 className={`w-full h-full object-cover object-center transition duration-500 ${
                   photoFilter === 'grayscale'
                     ? 'grayscale contrast-110 group-hover:grayscale-0'
@@ -152,11 +154,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="absolute bottom-0 inset-x-0 p-3.5 bg-gradient-to-t from-[#0B0D13] via-[#0B0D13]/90 to-transparent flex flex-col gap-1.5 font-mono">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white font-extrabold tracking-wider text-[14px]">
-                    CƯỜNG ĐỖ
+                    {guestName.toUpperCase()}
                   </span>
                 </div>
                 <span className="text-[10px] text-[#00E5FF] tracking-wider uppercase font-semibold">
-                  B.S. ADVANCED COMPUTING &amp; SYSTEM ARCHITECTURE
+                  [ IDENTITY_PROFILE ]
                 </span>
               </div>
             </div>

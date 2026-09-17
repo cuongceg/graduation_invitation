@@ -1,11 +1,8 @@
 export type AffiliationType = 
-  | 'Gia đình' 
-  | 'Bạn học' 
-  | 'Giảng viên' 
-  | 'Bạn thân' 
-  | 'Lab Partner' 
-  | 'Advisor'
-  | 'Khác';
+  | 'Family' 
+  | 'Friend'
+  | 'Colleague'
+  | 'Lecturer';
 
 export interface WishEntry {
   id: string;
@@ -19,7 +16,7 @@ export interface WishEntry {
   isCustom?: boolean;
 }
 
-export type ActiveNavTab = 'overview' | 'timeline' | 'guestbook' | 'sector-map';
+export type ActiveNavTab = 'overview' | 'dress-code' | 'guestbook' | 'sector-map';
 
 export type LanguageCode = 'en' | 'vi';
 
