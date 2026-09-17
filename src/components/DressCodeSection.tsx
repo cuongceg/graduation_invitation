@@ -21,10 +21,10 @@ export const DressCodeSection: React.FC<{ language: LanguageCode }> = ({ languag
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full" id="dress-code-section">
-      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-md">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 w-full" id="dress-code-section">
+      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 sm:gap-6 shadow-md">
         {/* Left Specification */}
-        <div className="flex flex-col gap-2 max-w-xl">
+        <div className="flex flex-col gap-2 max-w-xl w-full">
           <div className="flex items-center gap-2 font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
             <Shirt size={16} aria-hidden="true" />
             <span>{isVietnamese ? '[ TRANG_PHỤC ]' : '[ DRESS_SPEC ]'}</span>
@@ -42,7 +42,7 @@ export const DressCodeSection: React.FC<{ language: LanguageCode }> = ({ languag
         </div>
 
         {/* Right Palette & Specifications */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full lg:w-auto lg:-translate-x-12">
           {/* Approved Palette Matrix */}
           <div className="flex flex-col gap-2 font-mono">
             <div className="flex items-center justify-between">

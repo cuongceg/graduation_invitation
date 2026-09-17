@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[#0D0D0E] border-t border-[#2A2A30] py-8 text-[#94A3B8] font-mono">
+    <footer className="w-full bg-[#0D0D0E] border-t border-[#2A2A30] py-6 sm:py-8 text-[#94A3B8] font-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-4">
         {/* Status Chip */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#131722] border border-[#232B3E] text-xs">
@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
             &gt; CONTACT SUPPORT
           </span>
           <p className="text-slate-400 max-w-md">
-            For help with the ceremony, parking, or the web, please contact us directly.
+            For help with the ceremony, parking, or the web, please contact us directly. For any technical issues with the invitation, please help me fix.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export const Footer: React.FC = () => {
             href="tel:+84901234567"
           >
             <span className="material-symbols-outlined text-[14px] text-[#00E5FF]">call</span>
-            <span>+84 901 234 567</span>
+            <span>+84 123 456 789</span>
           </a>
 
           <a

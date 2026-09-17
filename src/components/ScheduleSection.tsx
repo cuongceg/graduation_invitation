@@ -58,11 +58,11 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full" id="ceremony-section">
-      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 w-full" id="ceremony-section">
+      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6 shadow-xl relative overflow-hidden">
         {/* Left Date Telemetry */}
-        <div className="flex items-center gap-4 relative z-10">
-          <div className="w-16 h-16 rounded-lg border-2 border-[#FF1E42] bg-[#0B0D13] flex flex-col items-center justify-center font-mono shadow-[0_0_12px_rgba(255,30,66,0.3)]">
+        <div className="flex items-center gap-3 sm:gap-4 relative z-10">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-lg border-2 border-[#FF1E42] bg-[#0B0D13] flex flex-col items-center justify-center font-mono shadow-[0_0_12px_rgba(255,30,66,0.3)]">
             <span className="text-[10px] text-[#00E5FF] font-bold tracking-widest">SEP</span>
             <span className="font-numeric text-2xl text-[#FF1E42] font-extrabold leading-none tabular-nums">27</span>
           </div>
@@ -70,7 +70,7 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
             <span className="font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
               {isVietnamese ? '[ NGÀY_TỔ_CHỨC ]' : '[ PROTOCOL_DATE ]'}
             </span>
-            <h2 className="font-chakra text-white text-lg sm:text-xl font-extrabold leading-tight">
+            <h2 className="font-chakra text-white text-base sm:text-xl font-extrabold leading-tight">
               9:30 AM – 10:00 AM (UTC+7)
             </h2>
             <p className="font-mono text-xs text-slate-400">

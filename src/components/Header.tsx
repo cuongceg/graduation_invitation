@@ -14,13 +14,13 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0D0D0E]/95 backdrop-blur-md border-b border-[#2A2A30]">
-      <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between font-mono">
+      <div className="h-14 sm:h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between font-mono">
         {/* Brand */}
         <div 
           onClick={() => onSelectTab('overview')}
           className="flex items-center gap-3 cursor-pointer group select-none"
         >
-          <div className="w-9 h-9 rounded-lg border border-[#FF1E42] bg-[#131722] flex items-center justify-center text-[#FF1E42] font-bold text-sm shadow-[0_0_12px_rgba(255,30,66,0.4)] group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-[#FF1E42] bg-[#131722] flex items-center justify-center text-[#FF1E42] font-bold text-xs sm:text-sm shadow-[0_0_12px_rgba(255,30,66,0.4)] group-hover:scale-105 transition-transform">
             CĐ
           </div>
         </div>
@@ -54,10 +54,10 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Right Status & Avatar */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <button
             onClick={onToggleLanguage}
-            className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] text-slate-400 bg-[#131722] border border-[#232B3E] hover:border-[#00E5FF]/60 hover:text-[#00E5FF] px-3 py-1 rounded-lg uppercase tracking-wider font-semibold transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] text-slate-400 bg-[#131722] border border-[#232B3E] hover:border-[#00E5FF]/60 hover:text-[#00E5FF] px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg uppercase tracking-wider font-semibold transition-colors cursor-pointer"
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="w-2 h-2 rounded-full bg-[#00E5FF]"></span>

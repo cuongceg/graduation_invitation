@@ -83,7 +83,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#FFFFFF',      // Neon Cyan sáng rực
+          'line-color': '#00E5FF',      // Walking route glow
           'line-width': 10,             // Bản rộng tạo quầng sáng
           'line-opacity': 0.4,
           'line-blur': 4,               // Làm nhòe viền tạo hiệu ứng neon
@@ -101,7 +101,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#3B82F6',      // Lõi trắng hoặc #00E5FF đặc
+          'line-color': '#00E5FF',      // Walking route
           'line-width': 4,              // Độ dày vừa đủ sắc nét
           'line-opacity': 1,
           'line-emissive-strength': 1.0,
@@ -221,21 +221,26 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       }
       await fetchRoute(currentOrigin, CEREMONY_WAYPOINT.coords, mode);
     } catch (err: any) {
-      alert('Please allow browser location access to get directions.');
+      alert('Something went wrong while fetching your location. You should change the device or fix my code.');
     }
   };
 
   // Recalculate the route when the travel mode changes
   const handleModeChange = (newMode: TravelMode) => {
     setTravelMode(newMode);
+    if (mapRef.current?.getLayer('route-main') && mapRef.current.getLayer('route-casing')) {
+      const isWalking = newMode === 'walking';
+      mapRef.current.setPaintProperty('route-casing', 'line-color', isWalking ? '#00E5FF' : '#FFFFFF');
+      mapRef.current.setPaintProperty('route-main', 'line-color', isWalking ? '#00E5FF' : '#3B82F6');
+    }
     if (userLocation) {
       fetchRoute(userLocation, CEREMONY_WAYPOINT.coords, newMode);
     }
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full" id="sector-map-section">
-      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-6 flex flex-col gap-4 shadow-xl font-mono">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 w-full" id="sector-map-section">
+      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col gap-4 shadow-xl font-mono">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#232B3E] pb-3">
           <div className="flex items-center gap-2 font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
@@ -281,7 +286,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
           </div>
 
           {/* Travel mode controls */}
-          <div className="absolute top-3 right-3 flex gap-1 z-10 bg-[#0B0D13]/80 p-1 rounded-lg border border-[#232B3E]">
+          <div className="absolute bottom-3 left-3 sm:top-3 sm:right-3 sm:bottom-auto sm:left-auto flex gap-1 z-10 bg-[#0B0D13]/80 p-1 rounded-lg border border-[#232B3E]">
             <button
               type="button"
               onClick={() => handleModeChange('walking')}
@@ -320,9 +325,9 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
               disabled={isLoadingRoute}
               aria-label={isLoadingRoute ? 'Đang tìm đường' : 'Route từ vị trí của tôi'}
               title={isLoadingRoute ? 'Đang tìm đường' : 'Route từ vị trí của tôi'}
-              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#FF1E42] bg-[#FF1E42] text-white shadow-[0_0_20px_rgba(255,30,66,0.45)] transition-all duration-300 hover:scale-110 hover:bg-[#ff3352] focus:outline-none focus:ring-2 focus:ring-[#FF1E42] focus:ring-offset-2 focus:ring-offset-[#0B0D13] disabled:cursor-wait disabled:opacity-60"
+              className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-[#FF1E42] bg-[#FF1E42] text-white shadow-[0_0_20px_rgba(255,30,66,0.45)] transition-all duration-300 hover:scale-110 hover:bg-[#ff3352] focus:outline-none focus:ring-2 focus:ring-[#FF1E42] focus:ring-offset-2 focus:ring-offset-[#0B0D13] disabled:cursor-wait disabled:opacity-60"
             >
-              <Navigation size={22} className={isLoadingRoute ? 'animate-pulse' : ''} />
+              <Navigation size={18} className={isLoadingRoute ? 'animate-pulse' : ''} />
             </button>
           </div>
         </div>
