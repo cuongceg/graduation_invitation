@@ -169,7 +169,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       const data = await res.json();
 
       if (!data.routes || data.routes.length === 0) {
-        alert('No available route was found.');
+        alert(isVietnamese ? 'Không tìm thấy tuyến đường phù hợp.' : 'No available route was found.');
         return;
       }
 
@@ -206,7 +206,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       }
     } catch (error) {
       console.error('Route calculation failed:', error);
-      alert('Unable to load the route. Check your connection or Mapbox token.');
+      alert(isVietnamese ? 'Không thể tải tuyến đường. Hãy kiểm tra kết nối.' : 'Unable to load the route. Check your connection.');
     } finally {
       setIsLoadingRoute(false);
     }
@@ -221,7 +221,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       }
       await fetchRoute(currentOrigin, CEREMONY_WAYPOINT.coords, mode);
     } catch (err: any) {
-      alert('Something went wrong while fetching your location. You should change the device or fix my code.');
+      alert(isVietnamese ? 'Đã xảy ra lỗi khi lấy vị trí của bạn. Bạn nên đổi thiết bị hoặc sửa code của tôi.' : 'Something went wrong while fetching your location. You should change the device or fix my code.');
     }
   };
 
@@ -240,12 +240,12 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
 
   return (
     <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 w-full" id="sector-map-section">
-      <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col gap-4 shadow-xl font-mono">
+      <div className={`rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col gap-4 shadow-xl ${isVietnamese ? 'font-chakra' : 'font-mono'}`}>
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#232B3E] pb-3">
-          <div className="flex items-center gap-2 font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
+          <div className={`flex items-center gap-2 ${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-[#00E5FF] uppercase tracking-widest font-semibold`}>
             <Pin size={16} aria-hidden="true" />
-            <span className="font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
+            <span className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-[#00E5FF] uppercase tracking-widest font-semibold`}>
               {isVietnamese ? '[ BẢN_ĐỒ ]' : '[ CAMPUS_WAYFINDING ]'}
             </span>
           </div>
@@ -261,15 +261,15 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-slate-300">
           <span className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#FF1E42] shadow-[0_0_8px_rgba(255,30,66,0.6)]"></span>
-            <span>My bachelor's degree location</span>
+            <span>{isVietnamese ? 'Địa điểm nhận bằng' : "Graduation Venue"}</span>
           </span>
           <span className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
-            <span>Parking area</span>
+            <span>{isVietnamese ? 'Khu vực đỗ xe' : 'Parking area'}</span>
           </span>
           <span className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
-            <span>Waiting and resting area</span>
+            <span>{isVietnamese ? 'Khu vực chờ và nghỉ ngơi' : 'Waiting and resting area'}</span>
           </span>
         </div>
 

@@ -62,32 +62,32 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
       <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6 shadow-xl relative overflow-hidden">
         {/* Left Date Telemetry */}
         <div className="flex items-center gap-3 sm:gap-4 relative z-10">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-lg border-2 border-[#FF1E42] bg-[#0B0D13] flex flex-col items-center justify-center font-mono shadow-[0_0_12px_rgba(255,30,66,0.3)]">
+          <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-lg border-2 border-[#FF1E42] bg-[#0B0D13] flex flex-col items-center justify-center ${isVietnamese ? 'font-chakra' : 'font-mono'} shadow-[0_0_12px_rgba(255,30,66,0.3)]`}>
             <span className="text-[10px] text-[#00E5FF] font-bold tracking-widest">SEP</span>
             <span className="font-numeric text-2xl text-[#FF1E42] font-extrabold leading-none tabular-nums">27</span>
           </div>
           <div className="flex flex-col">
-            <span className="font-mono text-xs text-[#00E5FF] uppercase tracking-widest font-semibold">
+            <span className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-[#00E5FF] uppercase tracking-widest font-semibold`}>
               {isVietnamese ? '[ NGÀY_TỔ_CHỨC ]' : '[ PROTOCOL_DATE ]'}
             </span>
             <h2 className="font-chakra text-white text-base sm:text-xl font-extrabold leading-tight">
               9:30 AM – 10:00 AM (UTC+7)
             </h2>
-            <p className="font-mono text-xs text-slate-400">
-              Hanoi University of Science and Technology • Hai Ba Trung • Ha Noi
+            <p className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-slate-400`}>
+              {isVietnamese ? 'Trường Đại học Bách Khoa Hà Nội • Hai Bà Trưng • Hà Nội' : 'Hanoi University of Science and Technology • Hai Ba Trung • Ha Noi'}
             </p>
           </div>
         </div>
 
         {/* Right Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 font-mono text-xs relative z-10">
+        <div className={`flex flex-wrap items-center gap-3 ${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs relative z-10`}>
           <div className="relative">
             <button
               onClick={handleSyncCalendar}
               className="px-5 py-2.5 rounded-lg bg-[#FF1E42] hover:bg-[#b91c1c] active:scale-95 text-white font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(255,30,66,0.35)] cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">calendar_add_on</span>
-              <span>[ SYNC CALENDAR ]</span>
+              <span>{isVietnamese ? '[ ĐỒNG BỘ LỊCH ]' : '[ SYNC CALENDAR ]'}</span>
             </button>
           </div>
 
@@ -105,8 +105,8 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
             </span>
             <span>
               {alertArmed
-                ? '[ ALERT ARMED // T-24H SYNCED ]'
-                : '[ SET ALERT ]'}
+                ? isVietnamese ? '[ THÔNG BÁO ĐÃ ĐẶt ]' : '[ ALERT ARMED ]'
+                : isVietnamese ? '[ ĐẶT THÔNG BÁO ]' : '[ SET ALERT ]'}
             </span>
           </button>
         </div>
@@ -114,7 +114,7 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
 
       {/* Sync Status Toast Bar if active */}
       {syncStatus && (
-        <div className="mt-2 px-4 py-2 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/40 text-[#00E5FF] font-mono text-xs flex items-center justify-between animate-fadeIn">
+        <div className={`mt-2 px-4 py-2 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/40 text-[#00E5FF] ${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs flex items-center justify-between animate-fadeIn`}>
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-ping"></span>
             {syncStatus}
@@ -123,7 +123,7 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
             onClick={handleGoogleCalendar}
             className="underline hover:text-white font-bold cursor-pointer"
           >
-            OPEN IN GOOGLE CALENDAR →
+            {isVietnamese ? 'MỞ TRONG GOOGLE CALENDAR →' : 'OPEN IN GOOGLE CALENDAR →'}
           </button>
         </div>
       )}

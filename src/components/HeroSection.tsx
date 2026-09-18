@@ -57,12 +57,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 [ INVITATION PROTOCOL: ]
               </span>
 
-              <span className="block text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)] [text-shadow:2px_0_0_rgba(0,229,255,0.25),-2px_0_0_rgba(255,30,66,0.25)] break-words">
-                {guestName.toUpperCase()}, YOU'RE INVITED.
+              <span className={`${isVietnamese ? 'font-chakra text-3xl sm:text-5xl lg:text-6xl' : 'text-2xl sm:text-4xl lg:text-5xl'} block font-extrabold text-[#FF1E42] drop-shadow-[0_0_15px_rgba(255,30,66,0.5)] [text-shadow:2px_0_0_rgba(0,229,255,0.25),-2px_0_0_rgba(255,30,66,0.25)] break-words`}>
+                {guestName.toUpperCase()}, {isVietnamese ? 'BẠN ĐÃ ĐƯỢC MỜI' : 'YOU\'RE INVITED'}
               </span>
 
-              <span className="block mt-2 text-base sm:text-2xl lg:text-[27px] font-extrabold text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] [text-shadow:2px_0_0_rgba(255,30,66,0.2)]">
-                JOIN ME FOR THE NEXT CHAPTER.
+              <span className={`${isVietnamese ? 'font-chakra text-lg sm:text-3xl lg:text-[30px]' : 'text-base sm:text-2xl lg:text-[27px]'} block mt-2 font-extrabold text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] [text-shadow:2px_0_0_rgba(255,30,66,0.2)]`}>
+                {isVietnamese ? 'SẴN SÀNG CHO CHƯƠNG TIẾP THEO.' : 'JOIN ME FOR THE NEXT CHAPTER.'}
               </span>
             </h1>
           </div>
@@ -72,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="absolute -top-12 -right-12 w-28 h-28 bg-[#FF1E42]/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <div className="flex items-center justify-between border-b border-[#232B3E] pb-3 relative z-10 flex-wrap gap-2">
-              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-slate-200">
+              <div className={`flex items-center gap-2 ${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase tracking-wider text-slate-200`}>
                 <span className="material-symbols-outlined text-[16px] text-[#FF1E42]">timer</span>
                 <span>{isVietnamese ? 'ĐẾM NGƯỢC ĐẾN LỄ TỐT NGHIỆP' : 'T-MINUS COMMENCEMENT PROCESSION'}</span>
               </div>

@@ -37,6 +37,15 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
     '❤️ ALWAYS_ROOTING',
   ];
 
+  const tagLabels: Record<string, string> = {
+    '🎓 PROUD_OF_YOU': '🎓 TỰ_HÀO_VỀ_BẠN',
+    '🚀 NEXT_CHAPTER': '🚀 CHƯƠNG_TIẾP_THEO',
+    '💫 KEEP_SHINING': '💫 TIẾP_TỤC_TỎA_SÁNG',
+    '❤️ ALWAYS_ROOTING': '❤️ LUÔN_ỦNG_HỘ',
+  };
+
+  const getTagLabel = (tag: string) => isVietnamese ? tagLabels[tag] || tag : tag;
+
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
@@ -109,12 +118,12 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
       <div className="rounded-xl border border-[#232B3E] bg-[#131722] p-4 sm:p-6 flex flex-col gap-5 sm:gap-6 shadow-xl">
         {/* Header */}
         <div className="flex flex-col gap-1 border-b border-[#232B3E] pb-4 font-mono">
-          <div className="flex items-center gap-2 text-xs text-[#00E5FF] uppercase tracking-widest font-bold">
+          <div className={`${isVietnamese ? 'font-chakra' : 'font-mono'} flex items-center gap-2 text-xs text-[#00E5FF] uppercase tracking-widest font-bold`}>
             <span className="material-symbols-outlined text-[16px]">terminal</span>
-            <span>[ MEMORY_STREAM ]</span>
+            <span>{isVietnamese ? '[ DÒNG_KÝ_ỨC ]' : '[ MEMORY_STREAM ]'}</span>
           </div>
-          <h3 className="font-display text-xl uppercase font-bold text-white tracking-wide">
-            TRANSMIT A MESSAGE
+          <h3 className={`${isVietnamese ? 'font-chakra' : 'font-display'} text-xl uppercase font-bold text-white tracking-wide`}>
+            {isVietnamese ? 'GỬI LỜI NHẮN' : 'TRANSMIT A MESSAGE'}
           </h3>
           <p className="font-mono text-xs text-slate-400">
             {isVietnamese ? 'Hãy chia sẻ lời chúc mừng và những kỷ niệm đáng nhớ cùng Cường trên hành trình tốt nghiệp.' : 'Leave a message for the next chapter. Your message will become part of Cường\'s graduation memory stream.'}
@@ -129,7 +138,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               <div className="p-3 rounded-lg border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-mono flex items-center justify-between animate-fadeIn shadow-[0_0_12px_rgba(0,229,255,0.25)]">
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-ping"></span>
-                  {isVietnamese ? '[ĐÃ GỬI THÔNG ĐIỆP] Lời chúc của bạn đã được ghi vào mạng lưới Spider-Protocol!' : '[ TRANSMISSION RECEIVED ] Your message has been successfully added to the memory stream!'}
+                  {isVietnamese ? '[ĐÃ GỬI THÔNG ĐIỆP] Lời chúc của bạn đã được ghi vào dòng ký ức!' : '[ TRANSMISSION RECEIVED ] Your message has been successfully added to the memory stream!'}
                 </span>
                 <span className="font-bold">STATUS: 200 OK</span>
               </div>
@@ -143,7 +152,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                   onClick={() => setErrorMessage('')}
                   aria-label={isVietnamese ? 'Đóng thông báo lỗi' : 'Dismiss error'}
                 >
-                  DISMISS
+                  {isVietnamese ? 'ĐÓNG' : 'DISMISS'}
                 </button>
               </div>
             )}
@@ -151,12 +160,12 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               {/* Full Name */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
+                <label className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase tracking-wider text-slate-300 font-bold`}>
                   &gt; {isVietnamese ? 'HỌ VÀ TÊN' : 'FULL_NAME'} <span className="text-[#FF1E42]">*</span>
                 </label>
                 <input
                   className="w-full px-3.5 py-2.5 rounded-lg bg-[#0B0D13] border border-[#232B3E] focus:border-[#FF1E42] focus:ring-1 focus:ring-[#FF1E42] text-white placeholder:text-slate-600 text-xs font-mono transition-colors outline-none"
-                  placeholder="e.g. Dr. William Henderson"
+                  placeholder={isVietnamese ? 'Ví dụ: Nguyễn Văn An' : 'e.g. Dr. William Henderson'}
                   required
                   type="text"
                   value={fullName}
@@ -166,7 +175,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
 
               {/* Affiliation */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
+                <label className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase tracking-wider text-slate-300 font-bold`}>
                   &gt; {isVietnamese ? 'MỐI QUAN HỆ' : 'CONNECTION_TYPE'}
                 </label>
                 <div className="flex flex-wrap gap-2 text-xs">
@@ -181,7 +190,14 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                           : 'border-[#232B3E] bg-[#0B0D13] text-slate-400 hover:text-[#00E5FF] hover:border-[#00E5FF]/50'
                       }`}
                     >
-                      [ {item.toUpperCase()} ]
+                      [{isVietnamese
+                        ? ({
+                            Family: 'GIA ĐÌNH',
+                            Friend: 'BẠN BÈ',
+                            Lecturer: 'GIẢNG VIÊN',
+                            Colleague: 'ĐỒNG NGHIỆP',
+                          } as Record<AffiliationType, string>)[item]
+                        : item.toUpperCase()}]
                     </button>
                   ))}
                 </div>
@@ -189,12 +205,12 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
 
               {/* Message */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
+                <label className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase tracking-wider text-slate-300 font-bold`}>
                   &gt; {isVietnamese ? 'NỘI DUNG LỜI CHÚC' : 'MESSAGE_PAYLOAD'} <span className="text-[#FF1E42]">*</span>
                 </label>
                 <textarea
                   className="w-full px-3.5 py-2.5 rounded-lg bg-[#0B0D13] border border-[#232B3E] focus:border-[#FF1E42] focus:ring-1 focus:ring-[#FF1E42] text-white placeholder:text-slate-600 text-xs font-mono transition-colors outline-none resize-none"
-                  placeholder="Share your congratulations, memories, or advice for Cường's journey ahead..."
+                  placeholder={isVietnamese ? 'Chia sẻ lời chúc, kỷ niệm hoặc lời nhắn dành cho hành trình sắp tới của Cường...' : "Share your congratulations, memories, or advice for Cường's journey ahead..."}
                   required
                   rows={4}
                   value={message}
@@ -205,8 +221,8 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               {/* Quick Tags */}
               <div className="flex flex-col gap-1.5">
                 
-                <label className="text-xs uppercase tracking-wider text-slate-300 font-bold">
-                  <span className="text-[#00E5FF]">&gt; QUICK_TAGS </span>
+                <label className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase tracking-wider text-slate-300 font-bold`}>
+                  <span className="text-[#00E5FF]">&gt; {isVietnamese ? 'NHÃN_NHANH' : 'QUICK_TAGS'} </span>
                 </label>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {availableTags.map(tag => {
@@ -222,7 +238,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                             : 'border-[#232B3E] bg-[#0B0D13] text-slate-200 hover:border-[#FF1E42]/60'
                         }`}
                       >
-                        {tag} {isSelected ? '✓' : ''}
+                        {getTagLabel(tag)} {isSelected ? '✓' : ''}
                       </button>
                     );
                   })}
@@ -232,7 +248,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               {/* Submit Button */}
               <div className="pt-2">
                 <button
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#FF1E42] hover:bg-[#b91c1c] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,30,66,0.35)] cursor-pointer disabled:opacity-50"
+                  className={`${isVietnamese ? 'font-chakra' : 'font-mono'} w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#FF1E42] hover:bg-[#b91c1c] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,30,66,0.35)] cursor-pointer disabled:opacity-50`}
                   type="submit"
                   disabled={isTransmitting}
                 >
@@ -253,12 +269,12 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
           <div className="lg:col-span-5 flex flex-col gap-3 font-mono">
             {/* Wall Header */}
             <div className="flex items-center justify-between border-b border-[#232B3E] pb-2">
-              <span className="text-xs uppercase font-bold tracking-wider text-white flex items-center gap-1.5">
+              <span className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs uppercase font-bold tracking-wider text-white flex items-center gap-1.5`}>
                 <span className="w-2 h-2 rounded-full bg-[#FF1E42]"></span>
-                [ WALL_OF_WISHES ]
+                {isVietnamese ? '[ BỨC_TƯỜNG_LỜI_CHÚC ]' : '[ WALL_OF_WISHES ]'}
               </span>
-              <span className="text-[10px] text-[#00E5FF] bg-[#00E5FF]/15 border border-[#00E5FF]/40 px-2 py-0.5 rounded font-bold shadow-[0_0_6px_rgba(0,229,255,0.2)]">
-                {wishes.length} RECORDS
+              <span className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-[10px] text-[#00E5FF] bg-[#00E5FF]/15 border border-[#00E5FF]/40 px-2 py-0.5 rounded font-bold shadow-[0_0_6px_rgba(0,229,255,0.2)]`}>
+                {wishes.length} {isVietnamese ? 'BẢN GHI' : 'RECORDS'}
               </span>
             </div>
 
@@ -267,7 +283,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder="Filter logs by name or text..."
+                  placeholder={isVietnamese ? 'Lọc lời nhắn theo tên hoặc nội dung...' : 'Filter logs by name or text...'}
                   value={searchFilter}
                   onChange={e => setSearchFilter(e.target.value)}
                   className="w-full px-2.5 py-1 rounded bg-[#0B0D13] border border-[#232B3E] focus:border-[#00E5FF] text-[11px] text-white placeholder:text-slate-600 outline-none"
@@ -278,13 +294,15 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                   <button
                     key={f}
                     onClick={() => setActiveAffiliationFilter(f)}
-                    className={`px-2 py-0.5 rounded border transition-colors cursor-pointer ${
+                    className={`${isVietnamese ? 'font-chakra' : 'font-mono'} px-2 py-0.5 rounded border transition-colors cursor-pointer ${
                       activeAffiliationFilter === f
                         ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10 font-bold'
                         : 'border-[#232B3E] text-slate-400 hover:text-white'
                     }`}
                   >
-                    {f}
+                    {isVietnamese
+                      ? ({ ALL: 'TẤT CẢ', Family: 'Gia đình', Friend: 'Bạn bè', Lecturer: 'Giảng viên', Colleague: 'Đồng nghiệp' } as Record<string, string>)[f]
+                      : f}
                   </button>
                 ))}
               </div>
@@ -294,7 +312,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
             <div className="flex flex-col gap-3 max-h-[520px] overflow-y-auto pr-1">
               {isLoadingWishes ? (
                 <div className="p-6 rounded-lg border border-[#232B3E] bg-[#0B0D13] text-center text-xs text-[#00E5FF]">
-                  LOADING MEMORY STREAM...
+                  {isVietnamese ? 'ĐANG TẢI DÒNG KÝ ỨC...' : 'LOADING MEMORY STREAM...'}
                 </div>
               ) : guestbookError ? (
                 <div className="p-6 rounded-lg border border-[#FF1E42] bg-[#0B0D13] text-center text-xs text-[#FF6B7F]">
@@ -302,7 +320,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                 </div>
               ) : filteredWishes.length === 0 ? (
                 <div className="p-6 rounded-lg border border-[#232B3E] bg-[#0B0D13] text-center text-xs text-slate-500">
-                  NO TELEMETRY MATCHES FILTER.
+                  {isVietnamese ? 'KHÔNG CÓ KẾT QUẢ PHÙ HỢP.' : 'NO TELEMETRY MATCHES FILTER.'}
                 </div>
               ) : (
                 filteredWishes.map(item => {
@@ -328,11 +346,13 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                           </span>
                           <span className="font-bold text-white">{item.name}</span>
                           <span
-                            className={`text-[10px] ${
+                            className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-[10px] ${
                               isColleague ? 'text-[#00E5FF]' : 'text-[#FF1E42]'
                             }`}
                           >
-                            [{item.affiliation}]
+                            [{isVietnamese
+                              ? ({ Family: 'Gia đình', Friend: 'Bạn bè', Lecturer: 'Giảng viên', Colleague: 'Đồng nghiệp' } as Record<string, string>)[item.affiliation]
+                              : item.affiliation}]
                           </span>
                         </div>
                         <span className="text-[10px] text-slate-400">{item.timestamp}</span>
@@ -350,7 +370,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                               key={idx}
                               className="px-1.5 py-0.5 rounded bg-[#131722] border border-[#232B3E] text-slate-400"
                             >
-                              {t}
+                              {getTagLabel(t)}
                             </span>
                           ))}
                         </div>

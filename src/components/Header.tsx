@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0D0D0E]/95 backdrop-blur-md border-b border-[#2A2A30]">
-      <div className="h-14 sm:h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between font-mono">
+      <div className={`h-14 sm:h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between ${language === 'vi' ? 'font-chakra' : 'font-mono'}`}>
         {/* Brand */}
         <div 
           onClick={() => onSelectTab('overview')}
@@ -31,25 +31,25 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectTab('overview')}
             className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded transition-all text-slate-400 hover:text-[#00E5FF]"
           >
-            Overview
+            {language === 'vi' ? 'Tổng quan' : 'Overview'}
           </button>
           <button
             onClick={() => onSelectTab('dress-code')}
             className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded transition-all text-slate-400 hover:text-[#00E5FF]"
           >
-            Dress Code
+            {language === 'vi' ? 'Trang phục' : 'Dress Code'}
           </button>
           <button
             onClick={() => onSelectTab('sector-map')}
             className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded transition-all text-slate-400 hover:text-[#00E5FF]"
           >
-            Sector Map
+            {language === 'vi' ? 'Bản đồ' : 'Sector Map'}
           </button>
           <button
             onClick={() => onSelectTab('guestbook')}
             className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded transition-all text-slate-400 hover:text-[#00E5FF]"
           >
-            Guestbook
+            {language === 'vi' ? 'Sổ lưu bút' : 'Guestbook'}
           </button>
         </nav>
 
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-1.5 sm:gap-3">
           <button
             onClick={onToggleLanguage}
-            className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] text-slate-400 bg-[#131722] border border-[#232B3E] hover:border-[#00E5FF]/60 hover:text-[#00E5FF] px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg uppercase tracking-wider font-semibold transition-colors cursor-pointer"
+            className={`inline-flex items-center gap-1.5 ${language === 'vi' ? 'font-chakra' : 'font-mono'} text-[10px] sm:text-[11px] text-slate-400 bg-[#131722] border border-[#232B3E] hover:border-[#00E5FF]/60 hover:text-[#00E5FF] px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg uppercase tracking-wider font-semibold transition-colors cursor-pointer`}
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="w-2 h-2 rounded-full bg-[#00E5FF]"></span>

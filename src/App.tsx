@@ -247,7 +247,7 @@ function InvitationApp({ guestId }: { guestId: string }) {
       </main>
 
       {/* Architectural Crimson Brutalist Footer */}
-      <Footer />
+      <Footer language={language} />
     </div>
   );
 }

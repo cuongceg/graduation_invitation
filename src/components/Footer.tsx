@@ -1,8 +1,11 @@
 import React from 'react';
+import { LanguageCode } from '../types';
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<{ language: LanguageCode }> = ({ language }) => {
+  const isVietnamese = language === 'vi';
+
   return (
-    <footer className="w-full bg-[#0D0D0E] border-t border-[#2A2A30] py-6 sm:py-8 text-[#94A3B8] font-mono">
+    <footer className={`w-full bg-[#0D0D0E] border-t border-[#2A2A30] py-6 sm:py-8 text-[#94A3B8] ${isVietnamese ? 'font-chakra' : 'font-mono'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-4">
         {/* Status Chip */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#131722] border border-[#232B3E] text-xs">
@@ -13,10 +16,12 @@ export const Footer: React.FC = () => {
         {/* Dispatch Assistance */}
         <div className="flex flex-col items-center gap-1 text-xs">
           <span className="uppercase tracking-widest text-white font-bold">
-            &gt; CONTACT SUPPORT
+            &gt; {isVietnamese ? 'LIÊN HỆ HỖ TRỢ' : 'CONTACT SUPPORT'}
           </span>
           <p className="text-slate-400 max-w-md">
-            For help with the ceremony, parking, or the web, please contact us directly. For any technical issues with the invitation, please help me fix.
+            {isVietnamese
+              ? 'Nếu cần hỗ trợ về buổi lễ, bãi đỗ xe hoặc trang web, vui lòng liên hệ trực tiếp với chúng tôi. Nếu gặp vấn đề kỹ thuật với thiệp mời, hãy sửa giúp tôi.'
+              : 'For help with the ceremony, parking, or the web, please contact us directly. For any technical issues with the invitation, please help me fix.'}
           </p>
         </div>
 
@@ -52,7 +57,7 @@ export const Footer: React.FC = () => {
         </div>
         {/* Copyright */}
         <p className="text-[10px] text-slate-500 tracking-wider uppercase">
-          © 2026 CEDRIC DO BUILD_VER 0.3.6. ALL RIGHTS RESERVED.
+            © 2026 CEDRIC DO BUILD_VER 0.3.6. {isVietnamese ? 'BẢO LƯU MỌI QUYỀN.' : 'ALL RIGHTS RESERVED.'}
         </p>
       </div>
     </footer>
