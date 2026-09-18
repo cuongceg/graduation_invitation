@@ -25,11 +25,11 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
       'BEGIN:VEVENT',
       'UID:graduation-cuong-do-2026@academialaureate.edu',
       'DTSTAMP:20260915T120000Z',
-      'DTSTART:20260927T140000Z',
-      'DTEND:20260927T170000Z',
+      'DTSTART:20260927T023000Z',
+      'DTEND:20260927T040000Z',
       'SUMMARY:Graduation Ceremony: Cường Đỗ (2026)',
-      'DESCRIPTION:Graduation ceremony. Seat A-14. Guest Access Code: <SPIDER_REC_SEP27>',
-      'LOCATION:Campus Quadrangle // Sector 7, Dimension NYC',
+      'DESCRIPTION:One chapter ends. Another begins. 🎓\\nA little celebration for a big milestone — and I’d love to share it with the people who made the journey special.\\nSee you there. ✨',
+      'LOCATION: Hanoi University of Science and Technology, Hai Bà Trưng, Hanoi, Vietnam',
       'STATUS:CONFIRMED',
       'END:VEVENT',
       'END:VCALENDAR',
@@ -49,7 +49,14 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
 
   const handleGoogleCalendar = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const gCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Graduation+Ceremony:+Cường+Đỗ+(2026)&dates=20260927T140000Z/20260927T170000Z&details=Graduation+ceremony.+Seat+A-14.+Guest+Access+Code:+SPIDER_REC_SEP27&location=Academic+Quadrangle,+Sector+7,+NYC';
+    const calendarParams = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: 'Graduation Ceremony: Cường Đỗ (2026)',
+      dates: '20260927T023000Z/20260927T040000Z',
+      details: 'One chapter ends. Another begins. 🎓\nA little celebration for a big milestone — and I’d love to share it with the people who made the journey special.\nSee you there. ✨',
+      location: 'Hanoi University of Science and Technology, Hai Bà Trưng, Hanoi, Vietnam',
+    });
+    const gCalUrl = `https://calendar.google.com/calendar/render?${calendarParams.toString()}`;
     window.open(gCalUrl, '_blank');
   };
 

@@ -221,7 +221,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       }
       await fetchRoute(currentOrigin, CEREMONY_WAYPOINT.coords, mode);
     } catch (err: any) {
-      alert(isVietnamese ? 'Đã xảy ra lỗi khi lấy vị trí của bạn. Bạn nên đổi thiết bị hoặc sửa code của tôi.' : 'Something went wrong while fetching your location. You should change the device or fix my code.');
+      alert(isVietnamese ? `Đã xảy ra lỗi khi lấy vị trí của bạn. Bạn nên đổi thiết bị hoặc sửa code của tôi. ${err.message}` : 'Something went wrong while fetching your location. You should change the device or fix my code.');
     }
   };
 
