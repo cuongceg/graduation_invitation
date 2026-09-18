@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { CarFront, Pin, Navigation, PersonStanding } from 'lucide-react';
+import { CarFront, Map, Pin, Navigation, PersonStanding } from 'lucide-react';
 import { LanguageCode } from '../types';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'YOUR_MAPBOX_ACCESS_TOKEN';
@@ -43,7 +43,7 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       container: mapContainerRef.current,
       style: MAPBOX_STYLE_URL,
       center: [105.8431, 21.0056],
-      zoom: 16.5,
+      zoom: window.matchMedia('(max-width: 640px)').matches ? 15.5 : 16.5,
       pitch: 0,
       attributionControl: false,
     });
@@ -153,6 +153,18 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
     });
   };
 
+  const openGoogleMapsFallback = (mode: TravelMode = travelMode) => {
+    const [lng, lat] = CEREMONY_WAYPOINT.coords;
+    const travelModeParam = mode === 'driving' ? 'driving' : 'walking';
+
+    let url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=${travelModeParam}`;
+    if (userLocation) {
+      url += `&origin=${userLocation[1]},${userLocation[0]}`;
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   // Call the Mapbox Directions API and draw the route
   const fetchRoute = async (
     origin: [number, number],
@@ -221,7 +233,15 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
       }
       await fetchRoute(currentOrigin, CEREMONY_WAYPOINT.coords, mode);
     } catch (err: any) {
-      alert(isVietnamese ? `Đã xảy ra lỗi khi lấy vị trí của bạn. Bạn nên đổi thiết bị hoặc sửa code của tôi. ${err.message}` : 'Something went wrong while fetching your location. You should change the device or fix my code.');
+      const confirmFallback = window.confirm(
+        isVietnamese
+          ? 'Không thể lấy vị trí trên trình duyệt. Bạn có muốn mở chỉ đường trực tiếp trên Google Maps không?'
+          : 'Unable to access your location in browser. Would you like to open navigation in Google Maps?'
+      );
+
+      if (confirmFallback) {
+        openGoogleMapsFallback(mode);
+      }
     }
   };
 
@@ -318,6 +338,16 @@ export const WayfindingSection: React.FC<{ language: LanguageCode }> = ({ langua
           </div>
 
           <div className="absolute bottom-3 right-3 z-10 flex flex-col items-center gap-2">
+
+            <button
+              type="button"
+              onClick={() => openGoogleMapsFallback()}
+              aria-label={isVietnamese ? 'Mở chỉ đường Google Maps' : 'Open Google Maps directions'}
+              title={isVietnamese ? 'Mở chỉ đường Google Maps' : 'Open Google Maps directions'}
+              className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-[#00E5FF] bg-[#0B0D13]/90 text-[#00E5FF] shadow-[0_0_18px_rgba(0,229,255,0.35)] transition-all duration-300 hover:scale-110 hover:bg-[#00E5FF]/15 focus:outline-none focus:ring-2 focus:ring-[#00E5FF] focus:ring-offset-2 focus:ring-offset-[#0B0D13]"
+            >
+              <Map size={18} aria-hidden="true" />
+            </button>
 
             <button
               type="button"
