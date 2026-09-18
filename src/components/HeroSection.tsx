@@ -157,8 +157,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     {guestName.toUpperCase()}
                   </span>
                 </div>
-                <span className="text-[10px] text-[#00E5FF] tracking-wider uppercase font-semibold">
-                  [ IDENTITY_PROFILE ]
+                <span className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-[10px] text-[#00E5FF] tracking-wider uppercase font-semibold`}>
+                  {isVietnamese ? '[ HỒ_SƠ_DANH_TÍNH ]' : '[ IDENTITY_PROFILE ]'}
                 </span>
               </div>
             </div>

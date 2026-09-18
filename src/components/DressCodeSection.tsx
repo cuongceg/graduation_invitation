@@ -37,7 +37,7 @@ export const DressCodeSection: React.FC<{ language: LanguageCode }> = ({ languag
           </div>
 
           <p className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-slate-400 leading-relaxed`}>
-            {isVietnamese ? 'Cứ là chính mình — không có quy định về trang phục. Hãy chọn bất cứ điều gì khiến bạn cảm thấy thoải mái. Những màu sắc ở đây chỉ là màu sắc của trang web.' : 'Come as you are — there\’s no dress code. Wear whatever feels like you. The colors shown here are only the visual theme of the web.'}
+            {isVietnamese ? 'Hãy là chính mình — không có quy định về trang phục. Hãy chọn bất cứ điều gì khiến bạn cảm thấy thoải mái. Những màu sắc ở đây chỉ là màu sắc của trang web.' : 'Come as you are — there\’s no dress code. Wear whatever feels like you. The colors shown here are only the visual theme of the web.'}
           </p>
         </div>
 
