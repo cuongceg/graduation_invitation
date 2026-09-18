@@ -71,7 +71,7 @@ export const ScheduleSection = ({ language }: { language: LanguageCode }) => {
               {isVietnamese ? '[ NGÀY_TỔ_CHỨC ]' : '[ PROTOCOL_DATE ]'}
             </span>
             <h2 className="font-chakra text-white text-base sm:text-xl font-extrabold leading-tight">
-              9:30 AM – 10:00 AM (UTC+7)
+              9:30 AM – 11:00 AM (UTC+7)
             </h2>
             <p className={`${isVietnamese ? 'font-chakra' : 'font-mono'} text-xs text-slate-400`}>
               {isVietnamese ? 'Trường Đại học Bách Khoa Hà Nội • Hai Bà Trưng • Hà Nội' : 'Hanoi University of Science and Technology • Hai Ba Trung • Ha Noi'}
